@@ -1,0 +1,28 @@
+language: "vi"
+
+pipeline:
+- name: "VietnameseTokenizer"
+  dictionary_path: "vi_lang/"
+
+- name: "RegexFeaturizer"
+- name: "CRFEntityExtractor"
+- name: "EntitySynonymMapper"
+- name: "CountVectorsFeaturizer"
+- name: "CountVectorsFeaturizer"
+  analyzer: "char_wb"
+  min_ngram: 1
+  max_ngram: 4
+  batch_size: 64
+- name: "EmbeddingIntentClassifier"
+  batch_strategy: sequence
+
+policies:
+  - name: FormPolicy
+  - name: AugmentedMemoizationPolicy
+  - name: KerasPolicy
+    epochs: 300
+  - name: MappingPolicy
+  - name: "FallbackPolicy"
+    nlu_threshold: 0.3
+    core_threshold: 0.3
+    fallback_action_name: 'action_default_fallback'
